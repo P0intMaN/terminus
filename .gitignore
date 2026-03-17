@@ -1,0 +1,16 @@
+# Gradle temporary files
+.gradle/
+build/
+
+# Local environment settings (e.g., path to your JDK)
+local.properties
+
+# Log files
+*.log
+
+# IDE specific (if you use VS Code or IntelliJ)
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
