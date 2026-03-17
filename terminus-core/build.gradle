@@ -1,0 +1,20 @@
+// No runtime dependencies. Intentional. See Phase 0 explanation.
+// JNA will be added in Week 3 when we need raw terminal mode.
+
+jar {
+    manifest {
+        attributes(
+            'Implementation-Title': 'Terminus Core',
+            'Implementation-Version': version
+        )
+    }
+}
+
+// Enable Java 21 preview features (for records, sealed classes)
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(Test) {
+    jvmArgs += ['--enable-preview']
+}

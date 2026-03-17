@@ -1,0 +1,4 @@
+rootProject.name = 'terminus'
+
+include 'terminus-core'
+include 'terminus-demo'

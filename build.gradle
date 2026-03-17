@@ -1,0 +1,33 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+
+    group = 'io.terminus'
+    version = '1.0.0-SNAPSHOT'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+        testImplementation 'org.assertj:assertj-core:3.25.3'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "failed", "skipped"
+        }
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+}

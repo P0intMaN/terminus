@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':terminus-core')
+}
+
+application {
+    mainClass = 'io.terminus.demo.DemoApp'
+}
