@@ -1,7 +1,12 @@
 package io.terminus.core.render;
 
-import io.terminus.core.*;
-import io.terminus.core.event.Event;
+import io.terminus.core.Bounds;
+import io.terminus.core.Cell;
+import io.terminus.core.Component;
+import io.terminus.core.Constraint;
+import io.terminus.core.Container;
+import io.terminus.core.LayoutAccess;
+import io.terminus.core.Leaf;
 import io.terminus.core.layout.LayoutEngine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +56,14 @@ class RendererTest {
 
     static class TestContainer extends Container {
         @Override
-        public Cell[][] render() { return new Cell[getHeight()][getWidth()]; }
+        public Cell[][] render() {
+            // Containers render a blank grid — children paint on top
+            int h = Math.max(1, getHeight());
+            int w = Math.max(1, getWidth());
+            Cell[][] grid = new Cell[h][w];
+            for (Cell[] row : grid) java.util.Arrays.fill(row, Cell.BLANK);
+            return grid;
+        }
 
         @Override
         public Bounds measure(Constraint c) {
@@ -78,12 +90,11 @@ class RendererTest {
         @DisplayName("renders a single leaf into the back buffer")
         void renders_singleLeaf() {
             FillerLeaf leaf = new FillerLeaf('A', 0xFF0000);
-            leaf.setBounds(new Bounds(0, 0, 20, 5));
+            LayoutAccess.setBounds(leaf, new Bounds(0, 0, 20, 5)); // ← fixed
 
             renderer.renderFrame(leaf);
 
             Cell[][] back = buffer.getBackBuffer();
-            // Every cell should be 'A' with red fg
             assertThat(back[0][0].glyph()).isEqualTo((int) 'A');
             assertThat(back[0][0].fg()).isEqualTo(0xFF0000);
             assertThat(back[4][19].glyph()).isEqualTo((int) 'A');
@@ -92,16 +103,13 @@ class RendererTest {
         @Test
         @DisplayName("clears back buffer before rendering — stale cells are gone")
         void clearsBackBuffer_beforeRender() {
-            // Manually write a stale cell into the back buffer
             buffer.setCell(5, 2, Cell.of('Z', 0x0000FF));
 
-            // Render a leaf that only covers (0,0,3,3)
             FillerLeaf smallLeaf = new FillerLeaf('A', 0xFF0000);
-            smallLeaf.setBounds(new Bounds(0, 0, 3, 3));
+            LayoutAccess.setBounds(smallLeaf, new Bounds(0, 0, 3, 3)); // ← fixed
 
             renderer.renderFrame(smallLeaf);
 
-            // The stale 'Z' at (5,2) should be gone — clearBack() wiped it
             assertThat(buffer.getBackBuffer()[2][5]).isEqualTo(Cell.BLANK);
         }
 
@@ -112,13 +120,11 @@ class RendererTest {
             FillerLeaf child = new FillerLeaf('C', 0x00FF00);
             container.addChild(child);
 
-            // Layout: container gets full screen, child gets full screen
-            container.setBounds(new Bounds(0, 0, 20, 5));
-            child.setBounds(new Bounds(0, 0, 20, 5));
+            LayoutAccess.setBounds(container, new Bounds(0, 0, 20, 5)); // ← fixed
+            LayoutAccess.setBounds(child, new Bounds(0, 0, 20, 5));     // ← fixed
 
             renderer.renderFrame(container);
 
-            // Child's 'C' cells should be in the buffer
             assertThat(buffer.getBackBuffer()[0][0].glyph()).isEqualTo((int) 'C');
         }
 
@@ -126,25 +132,21 @@ class RendererTest {
         @DisplayName("child at offset renders at the correct global position")
         void child_atOffset_rendersAtGlobalPosition() {
             TestContainer container = new TestContainer();
-            // A 5-wide, 1-tall leaf positioned at column 10
             FillerLeaf child = new FillerLeaf('X', 0xFFFFFF);
             container.addChild(child);
 
-            container.setBounds(new Bounds(0, 0, 20, 5));
-            child.setBounds(new Bounds(10, 2, 5, 1)); // offset x=10, y=2
+            LayoutAccess.setBounds(container, new Bounds(0, 0, 20, 5));  // ← fixed
+            LayoutAccess.setBounds(child, new Bounds(10, 2, 5, 1));      // ← fixed
 
             renderer.renderFrame(container);
 
             Cell[][] back = buffer.getBackBuffer();
-            // cols 10-14, row 2 should be 'X'
             for (int col = 10; col < 15; col++) {
                 assertThat(back[2][col].glyph())
                     .as("col %d should be 'X'", col)
                     .isEqualTo((int) 'X');
             }
-            // col 9 (just before) should be blank
             assertThat(back[2][9]).isEqualTo(Cell.BLANK);
-            // col 15 (just after) should be blank
             assertThat(back[2][15]).isEqualTo(Cell.BLANK);
         }
 
@@ -152,20 +154,19 @@ class RendererTest {
         @DisplayName("render() clears the dirty flag on each component")
         void render_clearsDirtyFlag() {
             FillerLeaf leaf = new FillerLeaf('A', 0xFF0000);
-            leaf.setBounds(new Bounds(0, 0, 20, 5));
-            assertThat(leaf.isDirty()).isTrue(); // starts dirty
+            LayoutAccess.setBounds(leaf, new Bounds(0, 0, 20, 5)); // ← fixed
+            assertThat(leaf.isDirty()).isTrue();
 
             renderer.renderFrame(leaf);
 
-            assertThat(leaf.isDirty()).isFalse(); // cleared after render
+            assertThat(leaf.isDirty()).isFalse();
         }
 
         @Test
         @DisplayName("skips components with empty bounds")
         void skips_emptyBounds() {
             FillerLeaf leaf = new FillerLeaf('A', 0xFF0000);
-            // Bounds.ZERO — not yet laid out
-            // leaf.setBounds NOT called — stays at ZERO
+            // No setBounds call — stays at Bounds.ZERO
 
             assertThatCode(() -> renderer.renderFrame(leaf))
                 .doesNotThrowAnyException();
