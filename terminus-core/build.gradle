@@ -1,7 +1,4 @@
 dependencies {
-    // JNA: Java Native Access — lets us call tcsetattr() for raw terminal mode.
-    // This is the ONLY runtime dependency Terminus will ever have.
-    // Version 5.14.0 is the latest stable as of 2024.
     implementation 'net.java.dev.jna:jna:5.14.0'
     implementation 'net.java.dev.jna:jna-platform:5.14.0'
 }

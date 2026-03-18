@@ -1,7 +1,32 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+apply plugin: 'application'
+
+application {
+    mainClass = 'io.terminus.demo.DemoApp'
+}
+
 dependencies {
     implementation project(':terminus-core')
 }
 
-application {
-    mainClass = 'io.terminus.demo.DemoApp'
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['--enable-preview']
+}
+
+tasks.withType(Test) {
+    jvmArgs += ['--enable-preview']
+}
+
+tasks.named('run') {
+    jvmArgs += ['--enable-preview']
+}
+
+shadowJar {
+    archiveBaseName = 'terminus-demo'
+    archiveClassifier = ''
+    archiveVersion   = ''
+    mergeServiceFiles()
 }

@@ -189,4 +189,9 @@ public abstract class Component {
     protected final int getHeight() { return bounds.height(); }
     protected final int getX()      { return bounds.x(); }
     protected final int getY()      { return bounds.y(); }
+    
+    /** Returns this component's parent, or null if this is the root. */
+    public final Component getParent() {
+        return parent;
+    }
 }

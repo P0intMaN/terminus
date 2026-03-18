@@ -1,6 +1,9 @@
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'application'
+    // NOTE: 'application' plugin is NOT applied here.
+    // Only terminus-demo needs it, so it lives in terminus-demo/build.gradle.
+    // Applying it globally would require every subproject to declare a
+    // mainClass — terminus-core is a library and has none.
 
     group = 'io.terminus'
     version = '1.0.0-SNAPSHOT'
@@ -28,6 +31,6 @@ subprojects {
         }
     }
 
-    compileJava.options.encoding = 'UTF-8'
+    compileJava.options.encoding    = 'UTF-8'
     compileTestJava.options.encoding = 'UTF-8'
 }

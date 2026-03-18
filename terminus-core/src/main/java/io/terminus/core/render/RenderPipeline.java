@@ -99,4 +99,9 @@ public class RenderPipeline {
     public ScreenBuffer getScreenBuffer() { return screenBuffer; }
     public int getCols() { return screenBuffer.getCols(); }
     public int getRows() { return screenBuffer.getRows(); }
+    
+    /** Clear the terminal. Called before the first frame. */
+    public void clearScreen() {
+        writer.clearScreen();
+    }
 }
