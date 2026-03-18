@@ -20,10 +20,6 @@ class RendererTest {
 
     // ── Test doubles ──────────────────────────────────────────────────────
 
-    /**
-     * A leaf that fills its entire bounds with a single character.
-     * Makes it easy to assert "did this component render here?"
-     */
     static class FillerLeaf extends Leaf {
         private final char fillChar;
         private final int fg;
@@ -57,7 +53,6 @@ class RendererTest {
     static class TestContainer extends Container {
         @Override
         public Cell[][] render() {
-            // Containers render a blank grid — children paint on top
             int h = Math.max(1, getHeight());
             int w = Math.max(1, getWidth());
             Cell[][] grid = new Cell[h][w];
@@ -83,16 +78,16 @@ class RendererTest {
     }
 
     @Nested
-    @DisplayName("renderFrame()")
-    class RenderFrame {
+    @DisplayName("renderOnly() — compositing with pre-set bounds")
+    class RenderOnly {
 
         @Test
         @DisplayName("renders a single leaf into the back buffer")
         void renders_singleLeaf() {
             FillerLeaf leaf = new FillerLeaf('A', 0xFF0000);
-            LayoutAccess.setBounds(leaf, new Bounds(0, 0, 20, 5)); // ← fixed
+            LayoutAccess.setBounds(leaf, new Bounds(0, 0, 20, 5));
 
-            renderer.renderFrame(leaf);
+            renderer.renderOnly(leaf);           // ← renderOnly, not renderFrame
 
             Cell[][] back = buffer.getBackBuffer();
             assertThat(back[0][0].glyph()).isEqualTo((int) 'A');
@@ -106,10 +101,11 @@ class RendererTest {
             buffer.setCell(5, 2, Cell.of('Z', 0x0000FF));
 
             FillerLeaf smallLeaf = new FillerLeaf('A', 0xFF0000);
-            LayoutAccess.setBounds(smallLeaf, new Bounds(0, 0, 3, 3)); // ← fixed
+            LayoutAccess.setBounds(smallLeaf, new Bounds(0, 0, 3, 3));
 
-            renderer.renderFrame(smallLeaf);
+            renderer.renderOnly(smallLeaf);      // ← renderOnly
 
+            // clearBack() wiped (5,2) before compositing the small leaf
             assertThat(buffer.getBackBuffer()[2][5]).isEqualTo(Cell.BLANK);
         }
 
@@ -120,10 +116,10 @@ class RendererTest {
             FillerLeaf child = new FillerLeaf('C', 0x00FF00);
             container.addChild(child);
 
-            LayoutAccess.setBounds(container, new Bounds(0, 0, 20, 5)); // ← fixed
-            LayoutAccess.setBounds(child, new Bounds(0, 0, 20, 5));     // ← fixed
+            LayoutAccess.setBounds(container, new Bounds(0, 0, 20, 5));
+            LayoutAccess.setBounds(child, new Bounds(0, 0, 20, 5));
 
-            renderer.renderFrame(container);
+            renderer.renderOnly(container);      // ← renderOnly
 
             assertThat(buffer.getBackBuffer()[0][0].glyph()).isEqualTo((int) 'C');
         }
@@ -135,10 +131,10 @@ class RendererTest {
             FillerLeaf child = new FillerLeaf('X', 0xFFFFFF);
             container.addChild(child);
 
-            LayoutAccess.setBounds(container, new Bounds(0, 0, 20, 5));  // ← fixed
-            LayoutAccess.setBounds(child, new Bounds(10, 2, 5, 1));      // ← fixed
+            LayoutAccess.setBounds(container, new Bounds(0, 0, 20, 5));
+            LayoutAccess.setBounds(child, new Bounds(10, 2, 5, 1));
 
-            renderer.renderFrame(container);
+            renderer.renderOnly(container);      // ← renderOnly
 
             Cell[][] back = buffer.getBackBuffer();
             for (int col = 10; col < 15; col++) {
@@ -154,24 +150,44 @@ class RendererTest {
         @DisplayName("render() clears the dirty flag on each component")
         void render_clearsDirtyFlag() {
             FillerLeaf leaf = new FillerLeaf('A', 0xFF0000);
-            LayoutAccess.setBounds(leaf, new Bounds(0, 0, 20, 5)); // ← fixed
+            LayoutAccess.setBounds(leaf, new Bounds(0, 0, 20, 5));
             assertThat(leaf.isDirty()).isTrue();
 
-            renderer.renderFrame(leaf);
+            renderer.renderOnly(leaf);           // ← renderOnly
 
             assertThat(leaf.isDirty()).isFalse();
         }
 
         @Test
-        @DisplayName("skips components with empty bounds")
+        @DisplayName("skips components with empty bounds — render() never called")
         void skips_emptyBounds() {
             FillerLeaf leaf = new FillerLeaf('A', 0xFF0000);
-            // No setBounds call — stays at Bounds.ZERO
+            // No setBounds — stays at Bounds.ZERO
 
-            assertThatCode(() -> renderer.renderFrame(leaf))
+            assertThatCode(() -> renderer.renderOnly(leaf))
                 .doesNotThrowAnyException();
 
             assertThat(leaf.getRenderCallCount()).isEqualTo(0);
+        }
+    }
+
+    @Nested
+    @DisplayName("renderFrame() — full layout + render pipeline")
+    class RenderFrame {
+
+        @Test
+        @DisplayName("full pipeline assigns bounds and renders the root")
+        void fullPipeline_assignsBoundsAndRenders() {
+            FillerLeaf leaf = new FillerLeaf('F', 0xFFFFFF);
+            // Note: no setBounds here — renderFrame() runs layout which assigns them
+
+            renderer.renderFrame(leaf);
+
+            // Layout stub gives root the full terminal size (20×5)
+            // so every cell should be 'F'
+            Cell[][] back = buffer.getBackBuffer();
+            assertThat(back[0][0].glyph()).isEqualTo((int) 'F');
+            assertThat(back[4][19].glyph()).isEqualTo((int) 'F');
         }
     }
 }
