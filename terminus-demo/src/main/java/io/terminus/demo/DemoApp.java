@@ -1,73 +1,131 @@
 package io.terminus.demo;
 
 import io.terminus.core.*;
+import io.terminus.core.components.ProgressBar;
 import io.terminus.core.event.Event;
-import io.terminus.core.event.KeyEvent;
+import io.terminus.core.event.StateChangeEvent;
+import io.terminus.core.terminal.EventLoop;
+import io.terminus.core.terminal.Terminal;
+import io.terminus.core.render.RenderPipeline;
+import io.terminus.core.terminal.EventDispatcher;
 
-/**
- * The first live Terminus application.
- *
- * What it does:
- *   - Displays a message in the center of the terminal
- *   - Shows the last key you pressed
- *   - Press Ctrl+C or Ctrl+Q to quit
- *
- * This proves the entire pipeline works end-to-end:
- * keystroke → KeyParser → EventLoop → component → render → screen
- */
 public class DemoApp {
 
-    /**
-     * A simple leaf that displays a message and the last key pressed.
-     * This is the simplest possible Terminus component.
-     */
-    static class HelloComponent extends Leaf {
+    static class ProgressDemo extends Leaf {
 
-        private String lastKey = "(press any key)";
+        private final ProgressBar eighthsBar = ProgressBar.builder()
+            .style(ProgressBar.Style.EIGHTHS)
+            .fg(0x7F77DD).label("Downloading").build();
+
+        private final ProgressBar blockBar = ProgressBar.builder()
+            .style(ProgressBar.Style.BLOCK)
+            .fg(0x1D9E75).label("Extracting").build();
+
+        private final ProgressBar asciiBar = ProgressBar.builder()
+            .style(ProgressBar.Style.ASCII)
+            .fg(0xEF9F27).label("Installing").build();
+
+        private final ProgressBar brailleBar = ProgressBar.builder()
+            .style(ProgressBar.Style.BRAILLE)
+            .fg(0xD4537E).label("Verifying").build();
+
+        private double progress = 0.0;
 
         @Override
         public Cell[][] render() {
+            // render() is PURE — only reads state, never mutates it
             Cell[][] grid = blankGrid();
+            int w = getWidth();
 
-            String line1 = "  Terminus is alive!  ";
-            String line2 = "  Last key: " + lastKey;
-            String line3 = "  Press Ctrl+C to quit  ";
+            writeString(grid, 0, 2,
+                "Terminus ProgressBar Demo",
+                0x7F77DD, Cell.DEFAULT_COLOR, Cell.ATTR_BOLD);
 
-            // Write each line at a fixed row
-            // Purple color: 0x7F77DD
-            writeString(grid, 1, 2, line1, 0x7F77DD, Cell.DEFAULT_COLOR, Cell.ATTR_BOLD);
-            writeString(grid, 3, 2, line2, 0xFFFFFF, Cell.DEFAULT_COLOR, Cell.ATTR_NONE);
-            writeString(grid, 5, 2, line3, 0x888780, Cell.DEFAULT_COLOR, Cell.ATTR_NONE);
+            writeString(grid, 1, 2,
+                "─".repeat(Math.min(w - 4, 40)),
+                0x444441, Cell.DEFAULT_COLOR, Cell.ATTR_NONE);
+
+            renderSubBar(grid, 3, eighthsBar, progress);
+            renderSubBar(grid, 5, blockBar,   Math.min(1.0, progress * 1.2));
+            renderSubBar(grid, 7, asciiBar,   Math.min(1.0, progress * 0.8));
+            renderSubBar(grid, 9, brailleBar, Math.min(1.0, progress * 1.5));
+
+            writeString(grid, 11, 2,
+                "Press Ctrl+C to quit",
+                0x555566, Cell.DEFAULT_COLOR, Cell.ATTR_NONE);
 
             return grid;
+        }
+
+        private void renderSubBar(Cell[][] grid, int row,
+                                   ProgressBar bar, double value) {
+            if (row >= grid.length) return;
+            int barWidth = Math.min(getWidth() - 4, 50);
+            bar.setValue(value);
+            LayoutAccess.setBounds(bar, new Bounds(0, 0, barWidth, 1));
+            Cell[][] barGrid = bar.render();
+            if (barGrid.length > 0) {
+                int copyWidth = Math.min(barWidth, grid[row].length - 2);
+                System.arraycopy(barGrid[0], 0, grid[row], 2, copyWidth);
+            }
+        }
+
+        @Override
+        public boolean onEvent(Event event) {
+            // StateChangeEvent with key "tick" drives the animation
+            if (event instanceof StateChangeEvent s
+                    && "tick".equals(s.key())) {
+                progress += 0.005;
+                if (progress > 1.0) progress = 0.0;
+                markDirty(); // NOW it's correct — mutation in onEvent, not render
+                return true;
+            }
+            return false;
         }
 
         @Override
         public Bounds measure(Constraint c) {
             return Bounds.of(c.maxWidth(), c.maxHeight());
         }
-
-        @Override
-        public boolean onEvent(Event event) {
-            if (event instanceof KeyEvent k) {
-                lastKey = buildKeyLabel(k);
-                markDirty(); // trigger re-render
-                return true; // consumed
-            }
-            return false;
-        }
-
-        private String buildKeyLabel(KeyEvent k) {
-            StringBuilder sb = new StringBuilder();
-            if (k.ctrl())  sb.append("Ctrl+");
-            if (k.alt())   sb.append("Alt+");
-            if (k.shift()) sb.append("Shift+");
-            sb.append(k.key());
-            return sb.toString();
-        }
     }
 
     public static void main(String[] args) {
-        TerminusApp.run(new HelloComponent());
+        if (!Terminal.isRealTerminal()) {
+            System.err.println("[Terminus] Run via: " +
+                "java --enable-preview -jar terminus-demo/build/libs/terminus-demo.jar");
+            System.exit(1);
+        }
+
+        int[] size       = Terminal.getSize();
+        RenderPipeline  pipeline   = new RenderPipeline(size[0], size[1]);
+        EventDispatcher dispatcher = new EventDispatcher();
+        EventLoop       loop       = new EventLoop(pipeline, dispatcher);
+
+        ProgressDemo root = new ProgressDemo();
+
+        // Start a background timer that posts tick events at ~60fps
+        // This is the correct way to drive animation — from outside render()
+        Thread timer = Thread.ofVirtual()
+            .name("terminus-animation-timer")
+            .start(() -> {
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        Thread.sleep(16); // ~60fps
+                        loop.post(new StateChangeEvent(
+                            System.nanoTime(), "tick", null));
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            });
+
+        try {
+            loop.start(root);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            timer.interrupt();
+        }
     }
 }
