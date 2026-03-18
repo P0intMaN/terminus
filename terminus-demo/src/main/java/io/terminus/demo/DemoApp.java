@@ -1,9 +1,7 @@
 package io.terminus.demo;
 
 import io.terminus.core.*;
-import io.terminus.core.components.Layout;
-import io.terminus.core.components.ProgressBar;
-import io.terminus.core.components.TextInput;
+import io.terminus.core.components.*;
 import io.terminus.core.event.Event;
 import io.terminus.core.event.KeyEvent;
 import io.terminus.core.event.StateChangeEvent;
@@ -13,202 +11,176 @@ import io.terminus.core.terminal.EventDispatcher;
 import io.terminus.core.terminal.EventLoop;
 import io.terminus.core.terminal.Terminal;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class DemoApp {
 
-    /**
-     * A simple Text leaf — renders a single line of styled text.
-     * We'll build a proper Text component in Step 9,
-     * but this stub is enough for the demo.
-     */
+    // ── Fake process data ─────────────────────────────────────────────────
+
+    record Process(String name, String status, double cpu,
+                   long memoryMb, int pid) {}
+
+    static List<Process> generateProcesses() {
+        return List.of(
+            new Process("nginx",      "running",  2.1,   128,  892),
+            new Process("postgres",   "running",  8.4,   512, 1204),
+            new Process("redis",      "running",  0.3,    64, 3301),
+            new Process("node",       "stopped",  0.0,     0, 4892),
+            new Process("java",       "running", 24.7,  1024, 5521),
+            new Process("python3",    "running",  3.2,   256, 6103),
+            new Process("docker",     "running",  1.8,   384, 7200),
+            new Process("prometheus", "running",  0.9,    96, 8814),
+            new Process("grafana",    "running",  1.2,   128, 9001),
+            new Process("kafka",      "running", 12.1,  768,  9420),
+            new Process("zookeeper",  "running",  0.4,   192, 9421),
+            new Process("elasticsearch","running",18.3, 2048, 9800)
+        );
+    }
+
+    // ── Text label helper ─────────────────────────────────────────────────
+
     static class TextLabel extends Leaf {
-        private final String text;
-        private final int    fg;
-        private final byte   attrs;
+        private String text;
+        private final int fg;
+        private final byte attrs;
 
         TextLabel(String text, int fg, byte attrs) {
             this.text = text; this.fg = fg; this.attrs = attrs;
         }
-
         TextLabel(String text, int fg) { this(text, fg, Cell.ATTR_NONE); }
 
-        @Override
-        public Cell[][] render() {
+        public void setText(String text) {
+            if (!this.text.equals(text)) { this.text = text; markDirty(); }
+        }
+
+        @Override public Cell[][] render() {
             Cell[][] grid = blankGrid();
             writeString(grid, 0, 0, text, fg, Cell.DEFAULT_COLOR, attrs);
             return grid;
         }
-
-        @Override
-        public Bounds measure(Constraint c) {
+        @Override public Bounds measure(Constraint c) {
             return Bounds.of(text.length(), 1);
         }
     }
 
-    static class DemoRoot extends Leaf {
+    // ── Demo root ─────────────────────────────────────────────────────────
 
-        // Inputs
-        private final TextInput searchInput = TextInput.builder()
-            .placeholder("Search... (Enter to submit)")
-            .build();
+    static class TableDemo extends Leaf {
 
-        private final TextInput nameInput = TextInput.builder()
-            .placeholder("Your name...")
-            .fg(0x1D9E75)
-            .maxLength(20)
-            .build();
-
-        // Progress bars
-        private final ProgressBar bar1 = ProgressBar.builder()
-            .style(ProgressBar.Style.EIGHTHS).fg(0x7F77DD)
-            .label("Tasks").build();
-
-        private final ProgressBar bar2 = ProgressBar.builder()
-            .style(ProgressBar.Style.BLOCK).fg(0x1D9E75)
-            .label("Memory").build();
-
-        private final ProgressBar bar3 = ProgressBar.builder()
-            .style(ProgressBar.Style.ASCII).fg(0xEF9F27)
-            .label("CPU").build();
-
-        // Build the layout tree once
+        private final ListTableModel<Process> model;
+        private final Table table;
+        private final TextLabel statusBar;
+        private final TextLabel titleLabel;
         private final Layout root;
-        private int focusedField = 0;
-        private double tick = 0;
-        private final java.util.List<String> log = new java.util.ArrayList<>();
+        private final Random  rng = new Random();
+        private List<Process> processes;
 
-        DemoRoot() {
-            searchInput.setFocused(true);
-            searchInput.setOnSubmit(text -> {
-                log.add(0, "> " + text);
-                if (log.size() > 3) log.remove(log.size() - 1);
+        TableDemo() {
+            processes = new ArrayList<>(generateProcesses());
+
+            // ── Build the model ───────────────────────────────────────
+            model = ListTableModel.<Process>builder()
+                .column(p -> p.name())
+                .column(p -> p.status())
+                .column(p -> String.format("%5.1f%%", p.cpu()),
+                        p -> p.cpu())
+                .column(p -> String.format("%6d MB", p.memoryMb()),
+                        p -> p.memoryMb())
+                .column(p -> String.valueOf(p.pid()),
+                        p -> (long) p.pid())
+                .build();
+            model.setRows(processes);
+
+            // ── Column definitions ────────────────────────────────────
+            ColumnDef[] cols = {
+                ColumnDef.flex("Name",    14),
+                ColumnDef.fixed("Status",  8),
+                ColumnDef.fixed("CPU%",    7, ColumnDef.Alignment.RIGHT),
+                ColumnDef.fixed("Memory", 10, ColumnDef.Alignment.RIGHT),
+                ColumnDef.fixed("PID",     6, ColumnDef.Alignment.RIGHT)
+            };
+
+            // ── Initialize labels FIRST — before anything that captures them ──
+            titleLabel = new TextLabel(
+                " Terminus Process Monitor", 0x7F77DD, Cell.ATTR_BOLD);
+            statusBar  = new TextLabel(
+                " ↑↓ navigate  s sort  S reverse  r reset  Ctrl+C quit",
+                0x888780);
+
+            // ── Build the table (now statusBar is definitely assigned) ────────
+            table = Table.builder(model, cols)
+                .onSelect(dataRow -> {
+                    Process p = processes.get(dataRow);
+                    statusBar.setText(String.format(
+                        " Selected: %s  (pid %d)  cpu=%.1f%%  mem=%d MB",
+                        p.name(), p.pid(), p.cpu(), p.memoryMb()));
+                })
+                .build();
+            table.setFocused(true);
+
+            // ── Layout tree ───────────────────────────────────────────
+            root = Layout.column().build();
+            root.add(titleLabel);
+            root.addFlex(table);
+            root.add(statusBar);
+        }
+
+        @Override
+        public Cell[][] render() {
+            Cell[][] grid = blankGrid();
+            LayoutAccess.setBounds(root, getBounds());
+            root.performLayout();
+            renderTree(root, grid);
+            return grid;
+        }
+
+        private void renderTree(Component comp, Cell[][] grid) {
+            if (comp.getBounds().isEmpty()) return;
+            if (!(comp instanceof Layout)) {
+                Cell[][] sub = comp.render();
+                Bounds b = comp.getBounds();
+                for (int r = 0; r < sub.length && b.y()+r < grid.length; r++) {
+                    for (int c = 0; c < sub[r].length
+                            && b.x()+c < grid[b.y()+r].length; c++) {
+                        grid[b.y()+r][b.x()+c] = sub[r][c];
+                    }
+                }
+            }
+            if (comp instanceof Container ct) {
+                for (Component child : ct.getChildren())
+                    renderTree(child, grid);
+            }
+        }
+
+        @Override
+        public boolean onEvent(Event event) {
+            if (event instanceof StateChangeEvent s
+                    && "tick".equals(s.key())) {
+                // Simulate fluctuating CPU values
+                processes = processes.stream().map(p ->
+                    p.status().equals("running")
+                        ? new Process(p.name(), p.status(),
+                            Math.max(0, p.cpu() + (rng.nextDouble()-0.5)*2),
+                            p.memoryMb(), p.pid())
+                        : p
+                ).toList();
+                model.setRows(processes);
+                table.refresh();
                 markDirty();
-            });
-
-            // ── Build the layout tree ──────────────────────────────────
-            // column
-            //   header row
-            //   divider
-            //   search row [label | input (flex)]
-            //   name row   [label | input (flex)]
-            //   hint
-            //   divider
-            //   progress bars (column)
-            //   divider
-            //   log entries
-
-            Layout searchRow = Layout.row().gap(1).build();
-            searchRow.add(new TextLabel("Search:", 0x888780));
-            searchRow.addFlex(searchInput);
-
-            Layout nameRow = Layout.row().gap(1).build();
-            nameRow.add(new TextLabel("Name:  ", 0x888780));
-            nameRow.addFlex(nameInput);
-
-            Layout bars = Layout.column().gap(1).build();
-            bars.add(bar1);
-            bars.add(bar2);
-            bars.add(bar3);
-
-            root = Layout.column().gap(0).padding(1, 2).build();
-            root.add(new TextLabel(
-                "Terminus TUI Demo", 0x7F77DD, Cell.ATTR_BOLD));
-            root.add(new TextLabel(
-                "─────────────────────────────────────────", 0x333344));
-            root.add(searchRow);
-            root.add(nameRow);
-            root.add(new TextLabel(
-                "Tab to switch fields  •  Enter to submit", 0x444455));
-            root.add(new TextLabel(
-                "─────────────────────────────────────────", 0x333344));
-            root.add(bars);
-            root.add(new TextLabel(
-                "─────────────────────────────────────────", 0x333344));
+                return false;
+            }
+            return table.onEvent(event);
         }
 
         @Override
         public Bounds measure(Constraint c) {
             return Bounds.of(c.maxWidth(), c.maxHeight());
         }
-
-        @Override
-        public Cell[][] render() {
-            Cell[][] grid = blankGrid();
-
-            // Run layout at our current bounds
-            LayoutAccess.setBounds(root, getBounds());
-            root.performLayout();
-
-            // Render each leaf in the tree into our grid
-            renderTree(root, grid);
-
-            // Draw log entries below the layout
-            int logY = root.getBounds().height() + 1;
-            for (int i = 0; i < log.size(); i++) {
-                writeString(grid, logY + i, 2, log.get(i),
-                    0xF0EFF8, Cell.DEFAULT_COLOR, Cell.ATTR_NONE);
-            }
-
-            return grid;
-        }
-
-        /**
-         * Recursively render a component tree into our cell grid.
-         * This is a local mini-renderer — it works because we OWN
-         * the grid and all components are positioned within our bounds.
-         */
-        private void renderTree(Component comp, Cell[][] grid) {
-            if (comp.getBounds().isEmpty()) return;
-            if (!(comp instanceof Layout)) {
-                Cell[][] sub = comp.render();
-                Bounds b = comp.getBounds();
-                for (int r = 0; r < sub.length; r++) {
-                    int targetRow = b.y() + r;
-                    if (targetRow >= grid.length) break;
-                    for (int c = 0; c < sub[r].length; c++) {
-                        int targetCol = b.x() + c;
-                        if (targetCol >= grid[targetRow].length) break;
-                        grid[targetRow][targetCol] = sub[r][c];
-                    }
-                }
-            }
-            if (comp instanceof Container container) {
-                for (Component child : container.getChildren()) {
-                    renderTree(child, grid);
-                }
-            }
-        }
-
-        @Override
-        public boolean onEvent(Event event) {
-            if (event instanceof StateChangeEvent s) {
-                if ("tick".equals(s.key())) {
-                    tick += 0.004;
-                    bar1.setValue(tick % 1.0);
-                    bar2.setValue((tick * 0.7) % 1.0);
-                    bar3.setValue((tick * 1.3) % 1.0);
-                    markDirty();
-                    return false;
-                }
-                if ("blink".equals(s.key())) {
-                    searchInput.onEvent(event);
-                    nameInput.onEvent(event);
-                    return false;
-                }
-            }
-
-            if (event instanceof KeyEvent k && "TAB".equals(k.key())) {
-                focusedField = 1 - focusedField;
-                searchInput.setFocused(focusedField == 0);
-                nameInput.setFocused(focusedField == 1);
-                markDirty();
-                return true;
-            }
-
-            return focusedField == 0
-                ? searchInput.onEvent(event)
-                : nameInput.onEvent(event);
-        }
     }
+
+    // ── Main ──────────────────────────────────────────────────────────────
 
     public static void main(String[] args) {
         if (!Terminal.isRealTerminal()) {
@@ -221,20 +193,14 @@ public class DemoApp {
         RenderPipeline  pipeline   = new RenderPipeline(size[0], size[1]);
         EventDispatcher dispatcher = new EventDispatcher();
         EventLoop       loop       = new EventLoop(pipeline, dispatcher);
-        DemoRoot        root       = new DemoRoot();
-
-        long[] lastBlink = { System.currentTimeMillis() };
+        TableDemo       root       = new TableDemo();
 
         Thread timer = Thread.ofVirtual().name("terminus-timer").start(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    Thread.sleep(16);
-                    long now = System.currentTimeMillis();
-                    loop.post(new StateChangeEvent(now, "tick", null));
-                    if (now - lastBlink[0] >= 530) {
-                        loop.post(new StateChangeEvent(now, "blink", null));
-                        lastBlink[0] = now;
-                    }
+                    Thread.sleep(500); // update every 500ms
+                    loop.post(new StateChangeEvent(
+                        System.nanoTime(), "tick", null));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
