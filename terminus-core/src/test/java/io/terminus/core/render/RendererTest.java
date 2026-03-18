@@ -2,7 +2,6 @@ package io.terminus.core.render;
 
 import io.terminus.core.Bounds;
 import io.terminus.core.Cell;
-import io.terminus.core.Component;
 import io.terminus.core.Constraint;
 import io.terminus.core.Container;
 import io.terminus.core.LayoutAccess;

@@ -1,6 +1,5 @@
 package io.terminus.core;
 
-import io.terminus.core.event.Event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
