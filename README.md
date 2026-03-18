@@ -11,7 +11,7 @@
 
 **A React-inspired TUI framework for Java 21**
 
-[![CI](https://github.com/yourusername/terminus/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/terminus/actions)
+[![CI](https://github.com/P0intMaN/terminus/actions/workflows/ci.yml/badge.svg)](https://github.com/P0intMaN/terminus/actions)
 [![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)](https://openjdk.org/projects/jdk/21/)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/io.terminus/terminus-core)](https://central.sonatype.com/artifact/io.terminus/terminus-core)
@@ -617,7 +617,7 @@ java --enable-preview -jar terminus-demo/build/libs/terminus-demo.jar
 Requirements: **Java 21**, **Gradle 8.1+**
 
 ```bash
-git clone https://github.com/yourusername/terminus.git
+git clone https://github.com/P0intMaN/terminus.git
 cd terminus
 
 # Build and test
