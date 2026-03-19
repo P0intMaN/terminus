@@ -43,21 +43,11 @@ public static void main(String[] args) {
 
 ## Quick demo
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  Terminus Process Monitor                                        │
-├──────────────────┬──────────┬────────┬───────────┬──────────────┤
-│ Name             │ Status   │  CPU%  │    Memory │  PID         │
-├──────────────────┼──────────┼────────┼───────────┼──────────────┤
-│ nginx            │ running  │   2.1% │    128 MB │  892         │
-│ postgres         │ running  │   8.4% │    512 MB │ 1204  █      │
-│▌postgres         │ running  │  24.7% │   1024 MB │ 5521  █      │
-│ python3          │ running  │   3.2% │    256 MB │ 6103  ░      │
-│ docker           │ running  │   1.8% │    384 MB │ 7200  ░      │
-├──────────────────┴──────────┴────────┴───────────┴──────────────┤
-│  ↑↓ navigate   s sort   S reverse   r reset   Ctrl+C quit       │
-└─────────────────────────────────────────────────────────────────┘
-```
+─────────────────────────────────────────────────────────────┘
+
+![Terminus Process Monitor](assets/terminusprocessmonitor.png)
+
+![Terminus Progress Bars and Text Fields](assets/progressbarsandtextfields.png)
 
 ---
 
