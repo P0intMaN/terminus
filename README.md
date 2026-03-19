@@ -43,7 +43,6 @@ public static void main(String[] args) {
 
 ## Quick demo
 
-─────────────────────────────────────────────────────────────┘
 
 ![Terminus Process Monitor](assets/terminusprocessmonitor.png)
 
