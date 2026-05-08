@@ -1,7 +1,5 @@
-<img width="2912" height="1466" alt="Image" src="https://github.com/user-attachments/assets/a8edfb43-a788-4367-8857-06d0df9eae8d" />
+<img width="" height="" alt="Image" src="https://github.com/user-attachments/assets/3b7aba45-6791-40a4-8bd1-fda69857b4d9" />
 <div align="center">
-
-**A React-inspired TUI framework for Java 21**
 
 [![CI](https://github.com/P0intMaN/terminus/actions/workflows/ci.yaml/badge.svg)](https://github.com/P0intMaN/terminus/actions/workflows/ci.yaml)
 [![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)](https://openjdk.org/projects/jdk/21/)
