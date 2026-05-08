@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Terminus — React-inspired TUI framework for Java 21</title>
+  <meta name="description" content="Zero-dependency TUI framework for Java 21. Component model, declarative layout, virtual scrolling, 60fps rendering.">
+  <meta property="og:title" content="Terminus — TUI framework for Java 21">
+  <meta property="og:description" content="Build rich terminal UIs in Java with components, declarative layout, and 60fps rendering.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== TOP NAV ===================== -->
+<nav class="topnav">
+  <a class="brand" href="/">
+    <span class="brand-glyph">T</span>
+    terminus
+  </a>
+  <div class="topnav-links">
+    <a href="#features">Features</a>
+    <a href="#install">Install</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="deck.html">Deck</a>
+    <a class="repo-link" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+                 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+                 -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
+                 .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
+                 -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0
+                 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+                 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01
+                 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+      GitHub
+      <span data-star-pill hidden class="star-pill">
+        ★ <span data-star-count>0</span>
+      </span>
+    </a>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Java 21 · TUI Framework</div>
+      <h1>Build terminal UIs<br>the <em>component</em> way.</h1>
+      <p class="lede">
+        Terminus brings the React component model to the terminal — compose layouts,
+        handle input, and render at 60fps with zero runtime dependencies.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#install">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/>
+            <path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"/>
+          </svg>
+          Get started
+        </a>
+        <a class="btn btn-ghost" href="deck.html">
+          Launch deck →
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">
+          View on GitHub
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-code">
+      <div class="code-bar">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-fname">App.java</span>
+      </div>
+      <pre><span class="com">// A complete TUI app in ~10 lines</span>
+<span class="kw">public static void</span> <span class="fn">main</span>(<span class="typ">String</span>[] args) {
+  <span class="typ">Layout</span> root = <span class="typ">Layout</span>.<span class="fn">column</span>()
+      .<span class="fn">padding</span>(<span class="num">1</span>)
+      .<span class="fn">build</span>();
+
+  root.<span class="fn">add</span>(<span class="typ">Text</span>.<span class="fn">bold</span>(<span class="str">"My App"</span>, <span class="num">0x7F77DD</span>));
+  root.<span class="fn">addFlex</span>(
+    <span class="typ">Table</span>.<span class="fn">builder</span>(model, columns).<span class="fn">build</span>()
+  );
+  root.<span class="fn">add</span>(statusBar);
+
+  <span class="typ">TerminusApp</span>.<span class="fn">run</span>(root);
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="features" id="features">
+  <div class="section-eyebrow">features</div>
+  <h2 class="section-title">Everything a TUI needs.<br><em>Nothing it doesn't.</em></h2>
+  <div class="feature-grid">
+    <div class="feature">
+      <div class="feature-tag">01 · components</div>
+      <h3>Composite model</h3>
+      <p>Everything is a <code>Component</code>. Compose <code>Leaf</code> nodes into <code>Container</code> trees. Uniform tree traversal and focus propagation.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-tag">02 · layout</div>
+      <h3>Declarative flex layout</h3>
+      <p>Flex row/column with gap, padding, and alignment. Fixed or flex-sized columns. No manual coordinate math.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-tag">03 · performance</div>
+      <h3>60fps double-buffered</h3>
+      <p>Double-buffered diff rendering. Only changed cells hit the terminal. Zero flicker, even on slow connections.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-tag">04 · table</div>
+      <h3>Virtual scrolling</h3>
+      <p>Tables with 100k+ rows render in O(visible rows). Numeric and lexical sort, multi-cycle column cycling, selection callbacks.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-tag">05 · input</div>
+      <h3>Rich keyboard &amp; mouse</h3>
+      <p>Full ANSI escape sequence parser. SGR mouse support. TextInput with history, kill rings, word-jump, and selection.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-tag">06 · runtime</div>
+      <h3>Zero runtime deps</h3>
+      <p>Only JNA for raw terminal mode. No logging framework, no JSON library, no HTTP client. Drop it in and ship.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== INSTALL ===================== -->
+<section class="install" id="install">
+  <div class="install-grid">
+    <div>
+      <div class="section-eyebrow">install</div>
+      <h2>One dependency.<br><em>Full framework.</em></h2>
+      <p>Add <code>terminus-core</code> to your build. No annotation processors, no code generation. Just components.</p>
+      <a class="btn btn-ghost" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener" style="margin-top:8px;">
+        GitHub →
+      </a>
+    </div>
+    <div>
+      <div style="margin-bottom:24px;">
+        <div class="section-eyebrow" style="margin:0 0 10px;">Gradle</div>
+        <div class="code-block">
+          <pre><span class="com">// build.gradle</span>
+<span class="fn">dependencies</span> {
+  <span class="fn">implementation</span> <span class="str">'io.terminus:terminus-core:1.0.0'</span>
+}</pre>
+        </div>
+      </div>
+      <div style="margin-bottom:24px;">
+        <div class="section-eyebrow" style="margin:0 0 10px;">Maven</div>
+        <div class="code-block">
+          <pre><span style="color:var(--dim)">&lt;dependency&gt;</span>
+  <span style="color:var(--dim)">&lt;groupId&gt;</span><span class="str">io.terminus</span><span style="color:var(--dim)">&lt;/groupId&gt;</span>
+  <span style="color:var(--dim)">&lt;artifactId&gt;</span><span class="str">terminus-core</span><span style="color:var(--dim)">&lt;/artifactId&gt;</span>
+  <span style="color:var(--dim)">&lt;version&gt;</span><span class="str">1.0.0</span><span style="color:var(--dim)">&lt;/version&gt;</span>
+<span style="color:var(--dim)">&lt;/dependency&gt;</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="section-eyebrow" style="margin:0 0 10px;">Run the demo</div>
+        <div class="code-block">
+          <pre><span class="com">$</span> git clone https://github.com/P0intMaN/terminus.git
+<span class="com">$</span> cd terminus
+<span class="com">$</span> ./gradlew :terminus-demo:shadowJar
+<span class="com">$</span> ./run-demo.sh   <span class="com"># real terminal — not via gradle</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ROADMAP ===================== -->
+<section class="roadmap" id="roadmap">
+  <div class="section-eyebrow">roadmap</div>
+  <h2 class="section-title">What's next.</h2>
+  <div class="roadmap-grid">
+    <div class="rm-card">
+      <h4>ScrollView</h4>
+      <p>Scrollable content pane with keyboard-driven navigation.</p>
+    </div>
+    <div class="rm-card">
+      <h4>Tree</h4>
+      <p>Expandable tree view component for hierarchical data.</p>
+    </div>
+    <div class="rm-card">
+      <h4>Modal</h4>
+      <p>Overlay with focus trap for dialogs and confirmations.</p>
+    </div>
+    <div class="rm-card">
+      <h4>Sparkline</h4>
+      <p>Inline time-series mini-chart for dashboards.</p>
+    </div>
+    <div class="rm-card">
+      <h4>Mouse routing</h4>
+      <p>Click events routed directly to the component under the cursor.</p>
+    </div>
+    <div class="rm-card">
+      <h4>Live reflow</h4>
+      <p>Terminal resize triggers a full layout reflow with no flicker.</p>
+    </div>
+    <div class="rm-card">
+      <h4>macOS support</h4>
+      <p>Alternate <code>termios</code> struct layout for Darwin targets.</p>
+    </div>
+    <div class="rm-card">
+      <h4>GraalVM native</h4>
+      <p><code>native-image</code> config for zero-startup-time binaries.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="brand" style="pointer-events:none;user-select:none;">
+      <span class="brand-glyph">T</span>
+      terminus
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">GitHub</a>
+      <a href="deck.html">Deck</a>
+      <a href="https://github.com/P0intMaN/terminus/blob/main/README.md" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/P0intMaN/terminus/issues" target="_blank" rel="noopener">Issues</a>
+      <a href="https://github.com/P0intMaN/terminus/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    </div>
+    <div class="footer-meta">Built with Java 21 · Inspired by Bubble Tea</div>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
