@@ -14,223 +14,433 @@
 </head>
 <body>
 
-<!-- ===================== TOP NAV ===================== -->
-<nav class="topnav">
-  <a class="brand" href="/">
-    <span class="brand-glyph">T</span>
-    terminus
-  </a>
-  <div class="topnav-links">
-    <a href="#features">Features</a>
-    <a href="#install">Install</a>
-    <a href="#roadmap">Roadmap</a>
-    <a href="deck.html">Deck</a>
-    <a class="repo-link" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
-                 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
-                 -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66
-                 .07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15
-                 -.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0
-                 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
-                 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01
-                 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+<!-- ═══════════════════ CHROME NAV ═══════════════════ -->
+<nav class="chrome-nav">
+  <span class="nav-dots">
+    <span class="r"></span><span class="y"></span><span class="g"></span>
+  </span>
+  <span class="nav-path">
+    <span class="prompt">~</span><span class="dir">/dev/terminus</span>
+    <span style="color:var(--dim)"> — zsh</span>
+  </span>
+  <div class="nav-links">
+    <a href="#what">what</a>
+    <a href="#components">components</a>
+    <a href="#performance">performance</a>
+    <a href="#install">install</a>
+    <a href="deck.html">deck →</a>
+    <a class="nav-gh" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
       </svg>
       GitHub
-      <span data-star-pill hidden class="star-pill">
-        ★ <span data-star-count>0</span>
-      </span>
+      <span data-star-pill hidden class="star-pill">★ <span data-star-count></span></span>
     </a>
   </div>
 </nav>
 
-<!-- ===================== HERO ===================== -->
+<!-- ═══════════════════ HERO ═══════════════════ -->
 <section class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="eyebrow">Java 21 · TUI Framework</div>
-      <h1>Build terminal UIs<br>the <em>component</em> way.</h1>
-      <p class="lede">
-        Terminus brings the React component model to the terminal — compose layouts,
-        handle input, and render at 60fps with zero runtime dependencies.
-      </p>
-      <div class="cta-row">
-        <a class="btn btn-primary" href="#install">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/>
-            <path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"/>
-          </svg>
-          Get started
-        </a>
-        <a class="btn btn-ghost" href="deck.html">
-          Launch deck →
-        </a>
-        <a class="btn btn-ghost" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">
-          View on GitHub
-        </a>
+  <pre class="hero-ascii">████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗██╗   ██╗███████╗
+╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██║   ██║██╔════╝
+   ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║██║   ██║███████╗
+   ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██║   ██║╚════██║
+   ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║╚██████╔╝███████║
+   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝</pre>
+
+  <p class="hero-tag">
+    A <em>React-inspired TUI framework</em> for Java 21<span class="hero-cur"></span>
+  </p>
+
+  <div class="hero-pills">
+    <span class="pill p">jdk 21</span>
+    <span class="pill">zero runtime deps</span>
+    <span class="pill g">60 fps</span>
+    <span class="pill">MIT</span>
+    <span data-star-pill hidden class="pill star">★ <span data-star-count></span></span>
+  </div>
+
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#install">Get started</a>
+    <a class="btn btn-ghost" href="deck.html">Launch deck →</a>
+    <a class="btn btn-ghost" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</section>
+
+<!-- ═══════════════════ WHAT IS TERMINUS ═══════════════════ -->
+<section class="section" id="what">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>what_is_terminus</div>
+    <h2 class="section-title">A <em>zero-dependency</em> TUI framework<br>that brings the <em>component model</em><br>from React and Flutter to the terminal.</h2>
+
+    <div class="four-col">
+      <div class="four-col-item">
+        <div class="item-label">you compose</div>
+        <div class="item-title">Components.</div>
+        <div class="item-sub">Layouts. State. Children. Terminus handles the rest.</div>
+      </div>
+      <div class="four-col-item">
+        <div class="item-label">terminus handles</div>
+        <div class="item-title">Raw mode.</div>
+        <div class="item-sub">ANSI escapes, signal handling, terminal state — all managed.</div>
+      </div>
+      <div class="four-col-item">
+        <div class="item-label">double-buffered</div>
+        <div class="item-title">Diff rendering.</div>
+        <div class="item-sub">Only changed cells hit the wire. Zero flicker at any framerate.</div>
+      </div>
+      <div class="four-col-item">
+        <div class="item-label">event loop</div>
+        <div class="item-title">60 fps.</div>
+        <div class="item-sub">Virtual threads for I/O. UI thread owns state. Unidirectional.</div>
       </div>
     </div>
 
-    <div class="hero-code">
-      <div class="code-bar">
-        <div class="code-dots"><span></span><span></span><span></span></div>
-        <span class="code-fname">App.java</span>
+    <div class="feat-rows" style="margin-top: 56px;">
+      <div class="feat-row">
+        <span class="k">Component model</span>
+        <span class="v">Composite pattern — everything is a <code>Component</code>. <span class="m">Leaf nodes render; Containers hold children.</span></span>
       </div>
-      <pre><span class="com">// A complete TUI app in ~10 lines</span>
-<span class="kw">public static void</span> <span class="fn">main</span>(<span class="typ">String</span>[] args) {
-  <span class="typ">Layout</span> root = <span class="typ">Layout</span>.<span class="fn">column</span>()
-      .<span class="fn">padding</span>(<span class="num">1</span>)
-      .<span class="fn">build</span>();
+      <div class="feat-row">
+        <span class="k">Declarative layout</span>
+        <span class="v">Flex row/column with gap, padding, alignment. <span class="m">No manual coordinate math.</span></span>
+      </div>
+      <div class="feat-row">
+        <span class="k">Virtual scrolling</span>
+        <span class="v">Tables with 100k+ rows render in O(visible rows). <span class="m">Numeric &amp; lexical sort built in.</span></span>
+      </div>
+      <div class="feat-row">
+        <span class="k">Keyboard + mouse</span>
+        <span class="v">Full ANSI escape parser, SGR mouse. <span class="m">TextInput: history, kill rings, word-jump, selection.</span></span>
+      </div>
+      <div class="feat-row">
+        <span class="k">Zero runtime deps</span>
+        <span class="v">Only JNA for raw terminal mode. <span class="m">No logging framework, no JSON library, no HTTP client.</span></span>
+      </div>
+      <div class="feat-row">
+        <span class="k">Java 21</span>
+        <span class="v">Records, sealed classes, virtual threads throughout. <span class="m">Preview features enabled by default.</span></span>
+      </div>
+    </div>
+  </div>
+</section>
 
-  root.<span class="fn">add</span>(<span class="typ">Text</span>.<span class="fn">bold</span>(<span class="str">"My App"</span>, <span class="num">0x7F77DD</span>));
-  root.<span class="fn">addFlex</span>(
-    <span class="typ">Table</span>.<span class="fn">builder</span>(model, columns).<span class="fn">build</span>()
-  );
-  root.<span class="fn">add</span>(statusBar);
+<!-- ═══════════════════ HELLO WORLD ═══════════════════ -->
+<section class="section" id="hello">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>hello_world</div>
+    <div class="hello-grid">
+      <div>
+        <h2 class="hello-heading">A complete TUI app<br>in <em>~10 lines</em>.</h2>
+        <p class="hello-sub">
+          Build a <code>Layout</code>, add components, call <code>TerminusApp.run()</code>.
+          Raw mode, the event loop, diff rendering — all handled for you.
+          No boilerplate, no lifecycle annotations, no XML.
+        </p>
+      </div>
+      <div class="code-panel">
+        <div class="code-bar">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-fname">App.java</span>
+        </div>
+        <pre><span class="com">// imports omitted</span>
+<span class="kw">public class</span> <span class="typ">App</span> {
+  <span class="kw">public static void</span> <span class="fn">main</span>(<span class="typ">String</span>[] args) {
+    <span class="typ">Layout</span> root = <span class="typ">Layout</span>.<span class="fn">column</span>().<span class="fn">padding</span>(<span class="num">1</span>).<span class="fn">build</span>();
 
-  <span class="typ">TerminusApp</span>.<span class="fn">run</span>(root);
+    root.<span class="fn">add</span>(<span class="typ">Text</span>.<span class="fn">bold</span>(<span class="str">"My App"</span>, <span class="num">0x7F77DD</span>));
+    root.<span class="fn">addFlex</span>(<span class="typ">Table</span>.<span class="fn">builder</span>(model, columns).<span class="fn">build</span>());
+    root.<span class="fn">add</span>(statusBar);
+
+    <span class="typ">TerminusApp</span>.<span class="fn">run</span>(root);
+  }
 }</pre>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===================== FEATURES ===================== -->
-<section class="features" id="features">
-  <div class="section-eyebrow">features</div>
-  <h2 class="section-title">Everything a TUI needs.<br><em>Nothing it doesn't.</em></h2>
-  <div class="feature-grid">
-    <div class="feature">
-      <div class="feature-tag">01 · components</div>
-      <h3>Composite model</h3>
-      <p>Everything is a <code>Component</code>. Compose <code>Leaf</code> nodes into <code>Container</code> trees. Uniform tree traversal and focus propagation.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-tag">02 · layout</div>
-      <h3>Declarative flex layout</h3>
-      <p>Flex row/column with gap, padding, and alignment. Fixed or flex-sized columns. No manual coordinate math.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-tag">03 · performance</div>
-      <h3>60fps double-buffered</h3>
-      <p>Double-buffered diff rendering. Only changed cells hit the terminal. Zero flicker, even on slow connections.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-tag">04 · table</div>
-      <h3>Virtual scrolling</h3>
-      <p>Tables with 100k+ rows render in O(visible rows). Numeric and lexical sort, multi-cycle column cycling, selection callbacks.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-tag">05 · input</div>
-      <h3>Rich keyboard &amp; mouse</h3>
-      <p>Full ANSI escape sequence parser. SGR mouse support. TextInput with history, kill rings, word-jump, and selection.</p>
-    </div>
-    <div class="feature">
-      <div class="feature-tag">06 · runtime</div>
-      <h3>Zero runtime deps</h3>
-      <p>Only JNA for raw terminal mode. No logging framework, no JSON library, no HTTP client. Drop it in and ship.</p>
+<!-- ═══════════════════ COMPONENT MODEL ═══════════════════ -->
+<section class="section" id="components">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>the_component_model</div>
+    <h2 class="section-title">Everything is a <em>Component</em>.</h2>
+
+    <div class="comp-grid">
+      <div class="code-panel">
+        <div class="code-bar">
+          <div class="code-dots"><span></span><span></span><span></span></div>
+          <span class="code-fname">terminus-core/</span>
+        </div>
+        <pre class="comp-tree"><span class="l1">Component</span> <span class="b">(abstract)</span>
+<span class="b">├──</span> <span class="l1">Leaf</span>          <span class="l3">// renders directly</span>
+<span class="b">│   ├──</span> Text
+<span class="b">│   ├──</span> ProgressBar
+<span class="b">│   ├──</span> TextInput
+<span class="b">│   ├──</span> Table
+<span class="b">│   └──</span> <span class="l3">[your component]</span>
+<span class="b">└──</span> <span class="l1">Container</span>
+<span class="b">    └──</span> Layout <span class="l3">(row | column)</span>
+<span class="b">        └──</span> <span class="l3">gap · padding · flex</span></pre>
+      </div>
+
+      <div class="comp-cards">
+        <div class="comp-card">
+          <h3 style="color:var(--purple)">Text</h3>
+          <p>Wrap, align, truncate, color. Word wrap with max-lines and ellipsis. The atom of every layout.</p>
+        </div>
+        <div class="comp-card">
+          <h3 style="color:var(--green)">ProgressBar</h3>
+          <p>Four styles — eighths Unicode, solid block, ASCII, and braille. All animate at 60fps.</p>
+        </div>
+        <div class="comp-card">
+          <h3 style="color:var(--amber)">TextInput</h3>
+          <p>Cursor, history, selection, kill rings. Ctrl+K, Ctrl+U, word-jump, SGR-bracketed paste.</p>
+        </div>
+        <div class="comp-card">
+          <h3 style="color:var(--pink)">Table</h3>
+          <p>100k+ rows. Virtual scroll. Sortable columns. Typed model. Selection callbacks.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===================== INSTALL ===================== -->
-<section class="install" id="install">
-  <div class="install-grid">
-    <div>
-      <div class="section-eyebrow">install</div>
-      <h2>One dependency.<br><em>Full framework.</em></h2>
-      <p>Add <code>terminus-core</code> to your build. No annotation processors, no code generation. Just components.</p>
-      <a class="btn btn-ghost" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener" style="margin-top:8px;">
-        GitHub →
-      </a>
+<!-- ═══════════════════ PERFORMANCE / VIRTUAL SCROLLING ═══════════════════ -->
+<section class="section" id="performance">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>virtual_scrolling</div>
+    <h2 class="section-title">100,000 rows.<br><em>Render only what's visible.</em></h2>
+
+    <div class="perf-grid">
+      <div>
+        <div class="stats-block">
+          <div class="stat purple">
+            <div class="n">100k+</div>
+            <div class="lbl">rows supported</div>
+          </div>
+          <div class="stat green">
+            <div class="n">O(v)</div>
+            <div class="lbl">visible-only render</div>
+          </div>
+        </div>
+
+        <div class="built-in-label">Built-in</div>
+        <ul class="built-in-list">
+          <li>Typed model, per-column extractors</li>
+          <li>Numeric &amp; lexical sort, multi-cycle</li>
+          <li>Flex + fixed columns with alignment</li>
+          <li>Selection callback, focus state</li>
+          <li>Custom row colors and highlight</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="kb-label">Keyboard navigation</div>
+        <table class="kb-table">
+          <tr><td>↑ ↓</td><td>move selection</td></tr>
+          <tr><td>Home / End</td><td>first / last row</td></tr>
+          <tr><td>Page Up / Down</td><td>scroll by page</td></tr>
+          <tr><td>s</td><td>cycle sort column</td></tr>
+          <tr><td>S</td><td>reverse sort direction</td></tr>
+          <tr><td>r</td><td>reset to original order</td></tr>
+          <tr><td>Enter</td><td>fire onSelect callback</td></tr>
+        </table>
+      </div>
     </div>
-    <div>
-      <div style="margin-bottom:24px;">
-        <div class="section-eyebrow" style="margin:0 0 10px;">Gradle</div>
-        <div class="code-block">
-          <pre><span class="com">// build.gradle</span>
-<span class="fn">dependencies</span> {
+  </div>
+</section>
+
+<!-- ═══════════════════ ARCHITECTURE ═══════════════════ -->
+<section class="section" id="architecture">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>architecture</div>
+    <h2 class="arch-title">
+      stdin <span class="arrow">→</span> events
+      <span class="arrow">→</span> diff
+      <span class="arrow">→</span> ANSI.
+    </h2>
+
+    <div class="arch-grid">
+      <div class="arch-col">
+        <h4>01 · ingest</h4>
+        <h3>EventLoop</h3>
+        <ul>
+          <li>stdin reader on a virtual thread</li>
+          <li>BlockingQueue&lt;Event&gt;</li>
+          <li>UI thread drains and dispatches</li>
+          <li>Sealed: Key · Mouse · Resize · State</li>
+        </ul>
+      </div>
+      <div class="arch-col">
+        <h4>02 · dispatch</h4>
+        <h3>EventDispatcher</h3>
+        <ul>
+          <li>Chain of Responsibility</li>
+          <li>Bubbles up the focus path</li>
+          <li>focused → parent → root</li>
+          <li>onEvent() mutates state, never UI</li>
+        </ul>
+      </div>
+      <div class="arch-col">
+        <h4>03 · render</h4>
+        <h3>RenderPipeline</h3>
+        <ul>
+          <li>LayoutEngine measures + places</li>
+          <li>Renderer walks the tree</li>
+          <li>ScreenDiffer computes deltas</li>
+          <li>AnsiWriter — atomic flush</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="arch-rule">
+      <span class="p">// The golden rule —</span>
+      <code>render()</code> is pure. State mutations live in <code>onEvent()</code>. Unidirectional data flow.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DESIGN PATTERNS ═══════════════════ -->
+<section class="section" id="patterns">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>design_patterns</div>
+    <h2 class="section-title">Built on <em>13 classic patterns</em>.</h2>
+
+    <div class="patterns-grid">
+      <table class="pat-table">
+        <tr><th>Pattern</th><th>Where</th></tr>
+        <tr><td>Composite</td><td>Component / Container / Leaf</td></tr>
+        <tr><td>Visitor</td><td>Renderer walking the tree</td></tr>
+        <tr><td>Chain of Responsibility</td><td>EventDispatcher</td></tr>
+        <tr><td>Observer</td><td>markDirty() bubbling</td></tr>
+        <tr><td>Builder</td><td>Every component API</td></tr>
+        <tr><td>Template Method</td><td>LayoutEngine</td></tr>
+        <tr><td>Strategy</td><td>FlexConfig, TableModel</td></tr>
+      </table>
+      <table class="pat-table">
+        <tr><th>Pattern</th><th>Where</th></tr>
+        <tr><td>Command</td><td>Event sealed hierarchy</td></tr>
+        <tr><td>Double Buffer</td><td>ScreenBuffer</td></tr>
+        <tr><td>Repository</td><td>TableModel</td></tr>
+        <tr><td>Facade</td><td>TerminusApp, RenderPipeline</td></tr>
+        <tr><td>State Machine</td><td>KeyParser</td></tr>
+        <tr><td>Value Object</td><td>Cell, Bounds, Constraint</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ INSTALL ═══════════════════ -->
+<section class="section" id="install">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>install</div>
+    <div class="install-grid">
+      <div>
+        <h2 class="install-heading">One dependency.<br><em>Full framework.</em></h2>
+        <p class="install-sub">
+          Add <code>terminus-core</code> to your build. No annotation processors,
+          no code generation, no configuration files. Just components.
+        </p>
+        <a class="btn btn-ghost" href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">
+          github.com/P0intMaN/terminus →
+        </a>
+      </div>
+
+      <div class="install-blocks">
+        <div>
+          <div class="install-label">Gradle</div>
+          <div class="code-panel">
+            <pre><span class="kw">dependencies</span> {
   <span class="fn">implementation</span> <span class="str">'io.terminus:terminus-core:1.0.0'</span>
 }</pre>
+          </div>
         </div>
-      </div>
-      <div style="margin-bottom:24px;">
-        <div class="section-eyebrow" style="margin:0 0 10px;">Maven</div>
-        <div class="code-block">
-          <pre><span style="color:var(--dim)">&lt;dependency&gt;</span>
-  <span style="color:var(--dim)">&lt;groupId&gt;</span><span class="str">io.terminus</span><span style="color:var(--dim)">&lt;/groupId&gt;</span>
-  <span style="color:var(--dim)">&lt;artifactId&gt;</span><span class="str">terminus-core</span><span style="color:var(--dim)">&lt;/artifactId&gt;</span>
-  <span style="color:var(--dim)">&lt;version&gt;</span><span class="str">1.0.0</span><span style="color:var(--dim)">&lt;/version&gt;</span>
-<span style="color:var(--dim)">&lt;/dependency&gt;</span></pre>
+        <div>
+          <div class="install-label">Maven</div>
+          <div class="code-panel">
+            <pre><span class="pn">&lt;dependency&gt;</span>
+  <span class="pn">&lt;groupId&gt;</span><span class="str">io.terminus</span><span class="pn">&lt;/groupId&gt;</span>
+  <span class="pn">&lt;artifactId&gt;</span><span class="str">terminus-core</span><span class="pn">&lt;/artifactId&gt;</span>
+  <span class="pn">&lt;version&gt;</span><span class="str">1.0.0</span><span class="pn">&lt;/version&gt;</span>
+<span class="pn">&lt;/dependency&gt;</span></pre>
+          </div>
         </div>
-      </div>
-      <div>
-        <div class="section-eyebrow" style="margin:0 0 10px;">Run the demo</div>
-        <div class="code-block">
-          <pre><span class="com">$</span> git clone https://github.com/P0intMaN/terminus.git
+        <div>
+          <div class="install-label">Run the demo</div>
+          <div class="code-panel">
+            <pre><span class="com">$</span> git clone https://github.com/P0intMaN/terminus.git
 <span class="com">$</span> cd terminus
 <span class="com">$</span> ./gradlew :terminus-demo:shadowJar
-<span class="com">$</span> ./run-demo.sh   <span class="com"># real terminal — not via gradle</span></pre>
+<span class="com">$</span> ./run-demo.sh   <span class="com"># a real terminal — not via gradle</span></pre>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===================== ROADMAP ===================== -->
-<section class="roadmap" id="roadmap">
-  <div class="section-eyebrow">roadmap</div>
-  <h2 class="section-title">What's next.</h2>
-  <div class="roadmap-grid">
-    <div class="rm-card">
-      <h4>ScrollView</h4>
-      <p>Scrollable content pane with keyboard-driven navigation.</p>
+<!-- ═══════════════════ ROADMAP ═══════════════════ -->
+<section class="section" id="roadmap">
+  <div class="inner">
+    <div class="slug"><span class="c">// </span>roadmap</div>
+    <h2 class="section-title">What's next.</h2>
+
+    <div class="rm-grid">
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">ScrollView</span> <span class="desc">— scrollable content pane with keyboard nav</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">Tree</span> <span class="desc">— expandable tree view component</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">Modal</span> <span class="desc">— overlay with focus trap</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">Sparkline</span> <span class="desc">— inline time-series mini-chart</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">Mouse routing</span> <span class="desc">— click events to component under cursor</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">Live reflow</span> <span class="desc">— terminal resize with zero flicker</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">macOS support</span> <span class="desc">— alternate termios struct layout for Darwin</span></span>
+      </div>
+      <div class="rm-item">
+        <span class="rm-box">·</span>
+        <span class="rm-text"><span class="name">GraalVM native-image</span> <span class="desc">— zero-startup-time binaries</span></span>
+      </div>
     </div>
-    <div class="rm-card">
-      <h4>Tree</h4>
-      <p>Expandable tree view component for hierarchical data.</p>
-    </div>
-    <div class="rm-card">
-      <h4>Modal</h4>
-      <p>Overlay with focus trap for dialogs and confirmations.</p>
-    </div>
-    <div class="rm-card">
-      <h4>Sparkline</h4>
-      <p>Inline time-series mini-chart for dashboards.</p>
-    </div>
-    <div class="rm-card">
-      <h4>Mouse routing</h4>
-      <p>Click events routed directly to the component under the cursor.</p>
-    </div>
-    <div class="rm-card">
-      <h4>Live reflow</h4>
-      <p>Terminal resize triggers a full layout reflow with no flicker.</p>
-    </div>
-    <div class="rm-card">
-      <h4>macOS support</h4>
-      <p>Alternate <code>termios</code> struct layout for Darwin targets.</p>
-    </div>
-    <div class="rm-card">
-      <h4>GraalVM native</h4>
-      <p><code>native-image</code> config for zero-startup-time binaries.</p>
+
+    <div class="rm-note">
+      <span style="color:var(--purple)">PRs welcome —</span>
+      open an issue first, add tests, keep <code>terminus-core</code> dependency-free.
+      <a href="https://github.com/P0intMaN/terminus/issues" target="_blank" rel="noopener" style="margin-left:12px">Open an issue →</a>
     </div>
   </div>
 </section>
 
-<!-- ===================== FOOTER ===================== -->
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
 <footer class="footer">
-  <div class="footer-grid">
-    <div class="brand" style="pointer-events:none;user-select:none;">
-      <span class="brand-glyph">T</span>
-      terminus
-    </div>
+  <div class="footer-inner">
+    <span class="footer-brand">terminus</span>
     <div class="footer-links">
       <a href="https://github.com/P0intMaN/terminus" target="_blank" rel="noopener">GitHub</a>
       <a href="deck.html">Deck</a>
       <a href="https://github.com/P0intMaN/terminus/blob/main/README.md" target="_blank" rel="noopener">Docs</a>
       <a href="https://github.com/P0intMaN/terminus/issues" target="_blank" rel="noopener">Issues</a>
-      <a href="https://github.com/P0intMaN/terminus/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      <a href="https://github.com/P0intMaN/terminus/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a>
     </div>
-    <div class="footer-meta">Built with Java 21 · Inspired by Bubble Tea</div>
+    <span class="footer-meta">Java 21 · Inspired by Bubble Tea · MIT</span>
   </div>
 </footer>
 
